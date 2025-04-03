@@ -13,7 +13,7 @@ import {
 const API_BASE_URL = '/api';
 // 환경에 따라 다른 호스트 사용
 const IS_DEV = process.env.NODE_ENV === 'development';
-const API_HOST = IS_DEV ? 'http://localhost:8888' : 'http://58.236.96.102:8888';
+const API_HOST = IS_DEV ? 'http://localhost:9000' : 'http://58.236.96.102:9000';
 const REGISTER_ENDPOINT = `${API_HOST}${API_BASE_URL}/registers`;
 
 // API 통신 오류 처리 함수
