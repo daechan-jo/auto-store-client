@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"target": "es5",                          // 컴파일된 JavaScript의 버전
+		"lib": ["dom", "dom.iterable", "esnext"], // 포함될 라이브러리 목록
+		"allowJs": true,                          // JavaScript 파일 허용
+		"skipLibCheck": true,                     // 라이브러리 타입 체크 건너뛰기
+		"esModuleInterop": true,                  // CommonJS와 ES6 모듈 상호 운용성 활성화
+		"allowSyntheticDefaultImports": true,     // default export가 없는 모듈에서도 import 허용
+		"strict": true,                           // 모든 엄격한 타입 체크 옵션 활성화
+		"forceConsistentCasingInFileNames": true, // 파일 이름 대소문자 일관성 체크
+		"noFallthroughCasesInSwitch": true,       // switch 문에서 fallthrough 케이스 체크
+		"module": "esnext",                       // 모듈 코드 생성 방식
+		"moduleResolution": "node",               // 모듈 해석 방식
+		"resolveJsonModule": true,                // .json 파일 import 허용
+		"isolatedModules": true,                  // 각 파일을 별도 모듈로 변환
+		"noEmit": true,                           // 출력 파일 생성 안 함 (빌드 도구가 처리)
+		"jsx": "react-jsx",                       // JSX 지원 방식 (React 17 이상은 react-jsx 사용)
+		"baseUrl": ".",                           // 상대 경로 해석의 기준 디렉토리
+		"paths": {                                // 경로 별칭 설정
+			"@/*": ["src/*"]
+		}
+	},
+	"include": ["src/**/*"],                    // 컴파일할 파일 패턴
+	"exclude": ["node_modules", "build", "dist", "**/*.spec.ts"] // 컴파일에서 제외할 패턴
+}
