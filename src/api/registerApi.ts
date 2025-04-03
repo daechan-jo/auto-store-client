@@ -10,8 +10,7 @@ import {
 } from '@/types/register.types';
 
 const API_BASE_URL = '/api';
-const API_HOST = 'http://58.236.96.102:9000';
-const REGISTER_ENDPOINT = `${API_HOST}${API_BASE_URL}/registers`;
+const REGISTER_ENDPOINT = `${API_BASE_URL}/registers`;
 
 // API 통신 오류 처리 함수
 const handleApiError = (error: any) => {
