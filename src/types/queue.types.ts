@@ -12,7 +12,7 @@ export interface WaitingJob extends JobBase {
 }
 
 // 실행 중인 작업
-export interface ActiveJob extends WaitingJob {
+export interface ActiveJob extends JobBase {
   processedOn: number;
 }
 
@@ -23,12 +23,12 @@ export interface CompletedJob extends JobBase {
 }
 
 // 실패한 작업
-export interface FailedJob extends WaitingJob {
+export interface FailedJob extends JobBase {
   failedReason: string;
 }
 
 // 지연된 작업
-export interface DelayedJob extends WaitingJob {
+export interface DelayedJob extends JobBase {
   delay: number;
   delayUntil: string;
 }

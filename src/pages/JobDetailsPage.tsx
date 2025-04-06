@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQueue } from '@/hooks/useQueue';
-import { JobStatus } from '../types/register.types';
+import { JobStatus } from '../types/queue.types';
 
 const JobDetailsPage: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();

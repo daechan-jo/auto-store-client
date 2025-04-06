@@ -1,21 +1,12 @@
 // src/hooks/useQueue.ts
 import { useState, useEffect, useCallback } from 'react';
-import {
-  getQueueStatus,
-  getWaitingJobs,
-  getActiveJobs,
-  getCompletedJobs,
-  getFailedJobs,
-  getDelayedJobs,
-  getAllJobs,
-  deleteJob,
-} from '../api/registerApi';
+import { getQueueStatus, getAllJobs, deleteJob } from '@/api/onchApi';
 import {
   JobStatusResponse,
   JobListResponse,
   AllJobsResponse,
   JobStatus,
-} from '../types/register.types';
+} from '@/types/queue.types';
 
 interface UseQueueProps {
   autoRefresh?: boolean;
@@ -116,7 +107,7 @@ export const useQueue = ({
 
   // 초기 데이터 로드
   useEffect(() => {
-    refreshData().catch(err => {
+    refreshData().catch((err) => {
       console.error('초기 데이터 로드 오류:', err);
     });
   }, [refreshData]);
@@ -126,7 +117,7 @@ export const useQueue = ({
     if (!autoRefresh) return;
 
     const intervalId = setInterval(() => {
-      refreshData().catch(err => {
+      refreshData().catch((err) => {
         console.error('자동 새로고침 오류:', err);
       });
     }, refreshInterval);

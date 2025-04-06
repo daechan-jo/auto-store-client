@@ -1,10 +1,18 @@
 // src/components/queue/JobCard.tsx
 import React, { useState } from 'react';
-import { JobStatus, JobData } from '@/types/register.types';
+import { JobStatus } from '@/types/queue.types';
+import {
+  JobBase,
+  WaitingJob,
+  ActiveJob,
+  CompletedJob,
+  FailedJob,
+  DelayedJob,
+} from '@/types/queue.types';
 import { useQueue } from '@/hooks/useQueue';
 
 interface JobCardProps {
-  job: JobData;
+  job: WaitingJob | ActiveJob | CompletedJob | FailedJob | DelayedJob;
   status: JobStatus;
   highlight?: boolean;
 }
@@ -15,7 +23,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, status, highlight = false }) => 
   const { deleteJobById } = useQueue();
 
   // 안전하게 타임스탬프 포맷팅
-  const formatDate = (timestamp?: number) => {
+  const formatDate = (timestamp?: number | string) => {
     if (!timestamp) return '알 수 없음';
     return new Date(timestamp).toLocaleString();
   };
@@ -75,19 +83,83 @@ const JobCard: React.FC<JobCardProps> = ({ job, status, highlight = false }) => 
     try {
       // 작업 데이터가 있으면 표시
       if (job && job.data && typeof job.data === 'object') {
-        // 제품 등록 작업인 경우
-        if (job.data.data && job.data.data.keyword) {
+        // 제품 등록 작업인 경우 (productRegistration 패턴)
+        if (job.data.pattern === 'productRegistration' && job.data.payload) {
+          const { jobId, jobType, store } = job.data.payload;
+          const { keyword, category, minPrice, maxPrice, tax, adult, channel, limit, repeat } =
+            job.data.payload.data || {};
+
           return (
-            <div>
-              <div className="font-medium">키워드: {job.data.data.keyword}</div>
-              {job.data.data.category && (
-                <div className="text-sm text-gray-600">카테고리: {job.data.data.category}</div>
-              )}
-              {(job.data.data.minPrice || job.data.data.maxPrice) && (
-                <div className="text-sm text-gray-600">
-                  가격: {job.data.data.minPrice || '0'} ~ {job.data.data.maxPrice || '무제한'}
+            <div className="space-y-2">
+              {/* 주요 정보 */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-gray-50 p-2 rounded-md">
+                  <span className="text-xs text-gray-500">작업 ID</span>
+                  <div className="font-medium">{jobId || '없음'}</div>
                 </div>
-              )}
+                <div className="bg-gray-50 p-2 rounded-md">
+                  <span className="text-xs text-gray-500">스토어</span>
+                  <div className="font-medium">{store || '없음'}</div>
+                </div>
+              </div>
+
+              {/* 검색 조건 */}
+              <div className="bg-blue-50 p-3 rounded-md">
+                <h3 className="font-medium text-blue-700 mb-2">검색 조건</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <span className="text-xs text-gray-500">키워드</span>
+                    <div className="font-semibold text-gray-800">{keyword || '없음'}</div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500">카테고리</span>
+                    <div>{category || '전체'}</div>
+                  </div>
+                </div>
+
+                <div className="mt-2">
+                  <span className="text-xs text-gray-500">가격 범위</span>
+                  <div className="flex items-center">
+                    <span className="font-medium">{Number(minPrice || 0).toLocaleString()}원</span>
+                    <span className="mx-2">~</span>
+                    <span className="font-medium">{Number(maxPrice || 0).toLocaleString()}원</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 필터 조건 */}
+              <div className="bg-purple-50 p-3 rounded-md">
+                <h3 className="font-medium text-purple-700 mb-2">필터 조건</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <span className="text-xs text-gray-500">과세 여부</span>
+                    <div>{tax || '전체'}</div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500">성인 상품</span>
+                    <div>{adult || '전체'}</div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500">판매 채널</span>
+                    <div>{channel || '전체'}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 작업 설정 */}
+              <div className="bg-green-50 p-3 rounded-md">
+                <h3 className="font-medium text-green-700 mb-2">작업 설정</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <span className="text-xs text-gray-500">검색 개수</span>
+                    <div className="font-medium">{limit || '0'}개</div>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500">반복 횟수</span>
+                    <div className="font-medium">{repeat || '0'}회</div>
+                  </div>
+                </div>
+              </div>
             </div>
           );
         }
@@ -122,13 +194,13 @@ const JobCard: React.FC<JobCardProps> = ({ job, status, highlight = false }) => 
       {/* 작업 ID와 헤더 */}
       <div className="flex justify-between items-start mb-2">
         <div>
-          <div className="font-bold text-gray-800">작업 #{job.id}</div>
+          <div className="font-bold text-gray-800 break-all">작업 #{job.id}</div>
           <div className="text-xs text-gray-500">생성: {formatDate(job.timestamp)}</div>
         </div>
 
         {/* 상태 배지 */}
         <div
-          className={`text-xs px-2 py-1 rounded-full font-medium
+          className={`text-xs px-2 py-1 rounded-full font-medium ml-2 whitespace-nowrap flex-shrink-0
           ${status === JobStatus.WAITING ? 'bg-blue-200 text-blue-800' : ''}
           ${status === JobStatus.ACTIVE ? 'bg-green-200 text-green-800' : ''}
           ${status === JobStatus.COMPLETED ? 'bg-purple-200 text-purple-800' : ''}
@@ -136,7 +208,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, status, highlight = false }) => 
           ${status === JobStatus.DELAYED ? 'bg-yellow-200 text-yellow-800' : ''}
         `}
         >
-          {status}
+          {status === 'ALL' ? '전체' : status}
         </div>
       </div>
 
@@ -148,22 +220,22 @@ const JobCard: React.FC<JobCardProps> = ({ job, status, highlight = false }) => 
         <div className="mt-4 pt-4 border-t border-gray-200">
           {/* 세부 정보 */}
           <div className="text-sm space-y-1">
-            {job.processedOn && (
+            {'processedOn' in job && job.processedOn && (
               <div>
                 <span className="font-medium">처리 시작:</span> {formatDate(job.processedOn)}
               </div>
             )}
-            {job.finishedOn && (
+            {'finishedOn' in job && job.finishedOn && (
               <div>
                 <span className="font-medium">완료 시간:</span> {formatDate(job.finishedOn)}
               </div>
             )}
-            {job.attemptsMade > 0 && (
+            {'attemptsMade' in job && job.attemptsMade && (
               <div>
                 <span className="font-medium">시도 횟수:</span> {job.attemptsMade}
               </div>
             )}
-            {job.failedReason && (
+            {'failedReason' in job && job.failedReason && (
               <div>
                 <span className="font-medium">실패 이유:</span>
                 <div className="bg-red-50 p-2 mt-1 rounded text-xs overflow-auto">
@@ -171,12 +243,12 @@ const JobCard: React.FC<JobCardProps> = ({ job, status, highlight = false }) => 
                 </div>
               </div>
             )}
-            {job.delay && (
+            {'delay' in job && job.delay && (
               <div>
                 <span className="font-medium">지연:</span> {job.delay}ms
               </div>
             )}
-            {job.delayUntil && (
+            {'delayUntil' in job && job.delayUntil && (
               <div>
                 <span className="font-medium">예정 시간:</span> {formatDate(job.delayUntil)}
               </div>

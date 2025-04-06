@@ -1,6 +1,5 @@
 // src/components/register/ProductForm.tsx
 import React, { useState, FormEvent, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useRegister } from '@/hooks/useRegister';
 import { useResponsive } from '@/hooks/useResponsive';
 import {
@@ -12,9 +11,8 @@ import {
 } from '@/types/register.types';
 
 const ProductForm: React.FC = () => {
-  const navigate = useNavigate();
   const { isMobile } = useResponsive();
-  const { loading, error, success, jobId, register } = useRegister();
+  const { loading, error, success, register } = useRegister();
   const submittedRef = useRef(false); // 중복 제출 방지를 위한 ref
 
   const [formData, setFormData] = useState<ProductRegistrationReqDto>({
@@ -58,11 +56,22 @@ const ProductForm: React.FC = () => {
 
   // useEffect를 사용하여 success 상태 변경 시 한 번만 실행되도록 함
   useEffect(() => {
-    if (success && jobId) {
+    if (success) {
       alert('제품 등록이 성공적으로 처리되었습니다.');
-      navigate(`/queue/status?highlight=${jobId}`);
+      // 등록 성공 후 폼 초기화 (선택적으로 추가할 수 있어)
+      setFormData({
+        keyword: '',
+        category: CategoryType.ALL,
+        minPrice: '5000',
+        maxPrice: '200000',
+        tax: TaxType.ALL,
+        adult: AdulType.NO,
+        channel: ChannelType.FREE,
+        limit: '100',
+        repeat: '1',
+      });
     }
-  }, [success, jobId, navigate]); // 의존성 배열에 success, jobId, navigate 추가
+  }, [success]); // navigate 제거
 
   return (
     <div className={`p-4 ${isMobile ? 'w-full' : 'max-w-2xl mx-auto'}`}>

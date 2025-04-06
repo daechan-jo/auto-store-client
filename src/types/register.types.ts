@@ -84,11 +84,18 @@ export interface JobData {
   timestamp: number;
   processedOn?: number;
   finishedOn?: number;
-  attemptsMade: number;
+  returnvalue?: any;
+  attemptsMade?: number;
   failedReason?: string;
   delay?: number;
-  delayUntil?: number;
+  delayUntil?: Date;
   [key: string]: any;
+}
+
+export interface ResponseDto<T> {
+  status: string;
+  data?: T;
+  jobId?: string; // jobId 필드 추가
 }
 
 /**
@@ -102,8 +109,8 @@ export interface JobStatusResponse {
     completed: number;
     failed: number;
     delayed: number;
+    paused: number;
   };
-  total?: number;
 }
 
 /**
@@ -120,20 +127,4 @@ export interface AllJobsResponse {
   completed: JobListResponse;
   failed: JobListResponse;
   delayed: JobListResponse;
-}
-
-/**
- * 작업 삭제 응답 인터페이스
- */
-export interface DeleteJobResponse {
-  success: boolean;
-  message: string;
-}
-
-/**
- * 제품 등록 응답 인터페이스
- */
-export interface ProductRegistrationResDto {
-  success: boolean;
-  jobId: string;
 }

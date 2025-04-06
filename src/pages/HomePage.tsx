@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useQueue } from '@/hooks/useQueue';
-import { JobStatus } from '@/types/register.types';
+import { JobStatus } from '@/types/queue.types';
 
 interface CountsType {
   waiting: number;
@@ -37,13 +37,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">제품 등록 관리 시스템</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          제품 등록 요청을 생성하고 관리할 수 있는 대시보드입니다. 제품 등록 큐의 상태를 확인하고,
-          작업을 관리하세요.
-        </p>
-      </div>
+      {/* 제목과 설명 부분 제거 */}
 
       <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-2 gap-8'} mb-8`}>
         <div className="bg-white shadow rounded-lg p-6">
@@ -118,7 +112,7 @@ const HomePage: React.FC = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         ) : queueStatus ? (
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <div className="bg-gray-100 p-3 rounded-lg text-center">
               <div className="text-lg font-bold">
                 {calculateTotalJobs()}
@@ -146,6 +140,11 @@ const HomePage: React.FC = () => {
             <div className="bg-red-100 p-3 rounded-lg text-center">
               <div className="text-lg font-bold text-red-800">{getCountValue(JobStatus.FAILED)}</div>
               <div className="text-sm text-red-800">실패함</div>
+            </div>
+            
+            <div className="bg-yellow-100 p-3 rounded-lg text-center">
+              <div className="text-lg font-bold text-yellow-800">{getCountValue(JobStatus.DELAYED)}</div>
+              <div className="text-sm text-yellow-800">지연됨</div>
             </div>
           </div>
         ) : (
