@@ -208,7 +208,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, status, highlight = false }) => 
           ${status === JobStatus.DELAYED ? 'bg-yellow-200 text-yellow-800' : ''}
         `}
         >
-          {status === 'ALL' ? '전체' : status}
+          {status}
         </div>
       </div>
 
