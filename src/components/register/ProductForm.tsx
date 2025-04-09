@@ -41,7 +41,13 @@ const ProductForm: React.FC = () => {
     submittedRef.current = true;
 
     try {
-      await register(formData);
+      // 공백인 경우 빈 문자열로 처리
+      const processedFormData = {
+        ...formData,
+        keyword: formData.keyword?.trim() === '' ? '' : (formData.keyword || ''),
+      };
+
+      await register(processedFormData);
     } catch (err) {
       alert(
         `등록 요청 중 오류가 발생했습니다: ${err instanceof Error ? err.message : '알 수 없는 오류'}`,
@@ -82,15 +88,12 @@ const ProductForm: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* 키워드 */}
         <div>
-          <label className="block mb-1">
-            검색 키워드 <span className="text-red-500">*</span>
-          </label>
+          <label className="block mb-1">검색 키워드</label>
           <input
             type="text"
             name="keyword"
             value={formData.keyword}
             onChange={handleChange}
-            required
             className="w-full p-2 border rounded"
             placeholder="검색할 제품 키워드"
           />

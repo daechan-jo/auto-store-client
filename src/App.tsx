@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import AppLayout from './components/common/AppLayout'
 import HomePage from './pages/HomePage'
 import JobDetailsPage from './pages/JobDetailsPage'
-import QueueDashboard from './components/queue/QueueDashboard'
-import ProductForm from './components/register/ProductForm'
+import QueueStatusPage from './pages/QueueStatusPage'
+import RegisterPage from './pages/RegisterPage'
 
 function App() {
   return (
@@ -11,9 +11,11 @@ function App() {
       <AppLayout>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/register" element={<ProductForm />} />
-          <Route path="/queue/status" element={<QueueDashboard />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/queue/status" element={<QueueStatusPage />} />
           <Route path="/job/:id" element={<JobDetailsPage />} />
+          {/* 404 페이지 처리를 위한 경로 추가 */}
+          <Route path="*" element={<HomePage />} />
         </Routes>
       </AppLayout>
     </Router>

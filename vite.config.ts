@@ -10,6 +10,16 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:9000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
   build: {
     outDir: 'dist',
     rollupOptions: {
@@ -30,21 +40,4 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['@nestjs/microservices', 'class-transformer', '@grpc/proto-loader'],
   },
-  // ssr: {
-  //   noExternal: true,
-  // },
-  // // 외부 모듈로 취급할 패키지들 지정
-  // server: {
-  //   fs: {
-  //     strict: false,
-  //   },
-  //   // 프록시 설정 - 개발 환경에서는 로컬 서버, 배포 환경에서는 외부 서버
-  //   proxy: {
-  //     '/api': {
-  //       target: 'http://58.236.96.102:9000',
-  //       changeOrigin: true,
-  //       secure: false,
-  //     },
-  //   },
-  // },
 });

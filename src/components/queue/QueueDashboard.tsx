@@ -12,8 +12,7 @@ const QueueDashboard: React.FC = () => {
   const { isMobile, isTablet } = useResponsive();
 
   const { loading, error, jobsByStatus } = useQueue({
-    autoRefresh: true,
-    refreshInterval: 10000,
+    autoRefresh: false,
   });
 
   const [activeTab, setActiveTab] = useState<JobStatus | 'ALL'>('ALL');

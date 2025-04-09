@@ -10,7 +10,6 @@ interface ResponseDto<T> {
 
 const API_BASE_URL = '/api';
 const REGISTER_ENDPOINT = `${API_BASE_URL}/managements`;
-// const REGISTER_ENDPOINT = 'http://localhost:9000/api/managements';
 
 // API 통신 오류 처리 함수
 const handleApiError = (error: any) => {

@@ -61,7 +61,7 @@ export enum JobStatus {
  * 제품 등록 요청 DTO
  */
 export interface ProductRegistrationReqDto {
-  keyword: string;
+  keyword?: string;
   category?: CategoryType;
   minPrice?: string;
   maxPrice?: string;
