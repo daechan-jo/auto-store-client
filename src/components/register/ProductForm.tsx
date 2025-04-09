@@ -23,8 +23,8 @@ const ProductForm: React.FC = () => {
     tax: TaxType.ALL,
     adult: AdulType.NO,
     channel: ChannelType.FREE,
-    limit: '100',
-    repeat: '1',
+    limit: '50',
+    repeat: '10',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
